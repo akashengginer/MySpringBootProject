@@ -32,11 +32,11 @@ pipeline{
     }
     stage("Quality Gate") {
             steps {
+                sh "echo waitForQualityGate().status"
                 timeout(time: 1, unit: 'HOURS') {
                     // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
                     // true = set pipeline to UNSTABLE, false = don't
-                    if (waitForQualityGate().status != 'OK')
-                    { abortPipeline: true}
+                    waitForQualityGate abortPipeline: true
                 }
             }
     }
