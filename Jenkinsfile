@@ -26,7 +26,7 @@ pipeline{
         steps{
             withSonarQubeEnv(installationName: 'Test_Sonar')
             {
-                sh 'mvn clean sonar:sonar'
+                sh 'mvn clean test sonar:sonar'
             }
         }
     }
