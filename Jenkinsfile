@@ -26,7 +26,7 @@ pipeline{
         steps{
             withSonarQubeEnv(installationName: 'Test_Sonar')
             {
-                sh "mvn clean org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184:sonar -Dsonar.exclusions=**/*.java"
+                sh 'mvn clean package org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184:sonar -Dsonar.exclusions=**/*.java'
             }
         }
     }
