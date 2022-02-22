@@ -34,10 +34,10 @@ pipeline{
     }
     stage("Quality Gate") {
             steps {
-                    sleep time: 1, unit: 'MINUTES'
-//                 timeout(time: 1, unit: 'HOURS') {
+                    sleep 30
+                    timeout(time: 1, unit: 'HOURS') {
                     waitForQualityGate abortPipeline: true
-//                 }
+                }
             }
     }
     stage('Creating an Artifactory Server Instance'){
