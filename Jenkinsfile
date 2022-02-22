@@ -30,15 +30,35 @@ pipeline{
             }
         }
     }
-    stage("Quality Gate") {
-        steps{
-             timeout(time: 1, unit: 'HOURS') {
-                    // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
-                    // true = set pipeline to UNSTABLE, false = don't
-                    waitForQualityGate abortPipeline: true
-             }
-        }
-    }
+    stage('Creating an Artifactory Server Instance'){
+            steps{
+                rtMavenResolver (
+                    id: 'resolver-unique-id',
+                    serverId: 'artifactory-server',
+                    releaseRepo: 'nagp-libs-release',
+                    snapshotRepo: 'nagp-libs-snapshot'
+                    )  
+                rtMavenDeployer (
+                    id: 'deployer-unique-id',
+                    serverId: 'artifactory-server',
+                    releaseRepo: 'nagp-libs-release',
+                    snapshotRepo: 'nagp-libs-snapshot'
+                    )
+                }
+           }
+   stage('Upload to Artifactory'){
+       steps{
+           rtMavenRun(
+                pom: 'pom.xml',
+                goals: 'clean install',
+                resolverId: 'resolver-unique-id',
+                deployerId: 'deployer-unique-id'
+           )
+           rtPublishBuildInfo(
+                serverId: 'artifactory-server'
+           )
+       }
+       }
     }
     post{
         success{
